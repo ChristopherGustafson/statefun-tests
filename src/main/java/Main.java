@@ -1,3 +1,4 @@
+
 import io.undertow.Undertow;
 import io.undertow.server.HttpHandler;
 import io.undertow.server.HttpServerExchange;
@@ -21,11 +22,10 @@ public class Main {
                 .withSupplier(FlowFn::new)
                 .build();
 
-        StatefulFunctions functions = new StatefulFunctions();
-        functions.withStatefulFunction(flowFn);
+        StatefulFunctions functions = new StatefulFunctions().withStatefulFunction(flowFn);
         RequestReplyHandler handler = functions.requestReplyHandler();
 
-        /* This example uses the Undertow http server, but any HTTP server/framework will work as-well */
+        // Use Undertow to serve incoming StateFun invocations
         Undertow server =
             Undertow.builder()
                     .addHttpListener(1108, "0.0.0.0")

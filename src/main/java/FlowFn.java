@@ -20,8 +20,10 @@ public class FlowFn implements StatefulFunction {
             final Messages.FlowData flowData = message.as(Messages.FLOW_DATA);
 
             AddressScopedStorage storage = context.storage();
-            int seen = storage.get(CARS_SEEN).orElse(0) + flowData.getCars();
+            int seen = storage.get(CARS_SEEN).orElse(0) + flowData.getFlow();
             storage.set(CARS_SEEN, seen);
+
+            System.out.println("In function");
 
             context.send(
                     KafkaEgressMessage.forEgress(FLOW_EGRESS)

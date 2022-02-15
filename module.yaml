@@ -1,14 +1,14 @@
 kind: io.statefun.endpoints.v2/http
 spec:
   functions: statefun-tests/*
-  urlPathTemplate: http://statefun-tests:1108/
+  urlPathTemplate: http://ndw-functions:1108/
   transport:
     type: io.statefun.transports.v1/async
 ---
 kind: io.statefun.kafka.v1/ingress
 spec:
-  id: statefun-tests/flow-input
-  address: kafka:9092
+  id: statefun-tests/flow-ingress
+  address: 192.168.0.7:9092
   consumerGroupId: my-group-id
   topics:
     - topic: ndwflow
@@ -18,8 +18,8 @@ spec:
 ---
 kind: io.statefun.kafka.v1/egress
 spec:
-  id: statefun-tests/flow-output
-  address: kafka:9092
+  id: statefun-tests/flow-egress
+  address: 192.168.0.7:9092
   deliverySemantic:
     type: exactly-once
     transactionTimeout: 15min

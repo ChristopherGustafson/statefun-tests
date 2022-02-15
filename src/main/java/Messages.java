@@ -18,27 +18,78 @@ public class Messages {
 
 
     public static class FlowData{
-        private final int cars;
-        private final double ratio;
+        private final String id;
+        private final double latitude;
+        private final double longitude;
+        private final int flow;
+        private final int period;
+        private final int accuracy;
+        private final String timestamp;
+        private final int numLanes;
 
         @JsonCreator
-        public FlowData(@JsonProperty("flow") String cars, @JsonProperty("ratio") String ratio){
-            this.cars =  Integer.parseInt(cars);
-            this.ratio = Double.parseDouble(ratio);
+        public FlowData(
+                @JsonProperty("internalId") String id,
+                @JsonProperty("lat") double latitude,
+                @JsonProperty("long") double longitude,
+                @JsonProperty("flow") int flow,
+                @JsonProperty("period") int period,
+                @JsonProperty("accuracy") int accuracy,
+                @JsonProperty("timestamp") String timestamp,
+                @JsonProperty("num_lanes") int numLanes
+        ){
+            this.id = id;
+            this.latitude = latitude;
+            this.longitude = longitude;
+            this.flow = flow;
+            this.period = period;
+            this.accuracy = accuracy;
+            this.timestamp = timestamp;
+            this.numLanes = numLanes;
         }
 
-        public int getCars(){
-            return cars;
+        public int getFlow(){
+            return flow;
         }
 
-        public double getRatio(){
-            return ratio;
+        public String getId() {
+            return id;
+        }
+
+        public double getLatitude() {
+            return latitude;
+        }
+
+        public double getLongitude() {
+            return longitude;
+        }
+
+        public int getPeriod() {
+            return period;
+        }
+
+        public int getAccuracy() {
+            return accuracy;
+        }
+
+        public String getTimestamp() {
+            return timestamp;
+        }
+
+        public int getNumLanes() {
+            return numLanes;
         }
 
         @Override
         public String toString() {
-            return "FlowData{cars=" + cars + "}";
+            return String.format("FlowData: {id: %s, lat: %f. long: %f, period: %d, accuracy: %d, timestamp: %s, numLanes: %d}",
+            id,
+            latitude,
+            longitude,
+            period,
+            accuracy,
+            timestamp,
+            numLanes);
         }
-
     }
 }
