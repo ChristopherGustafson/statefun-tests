@@ -19,11 +19,6 @@
     <dependencies>
         <dependency>
             <groupId>org.apache.flink</groupId>
-            <artifactId>statefun-sdk-java</artifactId>
-            <version>${statefun.version}</version>
-        </dependency>
-        <dependency>
-            <groupId>org.apache.flink</groupId>
             <artifactId>statefun-flink-distribution</artifactId>
             <version>${statefun.version}</version>
         </dependency>

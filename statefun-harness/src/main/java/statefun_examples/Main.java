@@ -1,16 +1,14 @@
+package statefun_examples;
+
 import org.apache.flink.statefun.flink.harness.Harness;
 import org.apache.flink.statefun.flink.harness.io.SerializableSupplier;
 import org.apache.flink.util.StringUtils;
-import org.junit.Test;
-import statefun_examples.MyConstants;
-import statefun_examples.MyMessages.InputMsg;
 
 import java.util.concurrent.ThreadLocalRandom;
 
-public class Runner {
+public class Main {
 
-    @Test
-    public void run() throws Exception {
+    public static void main(String[] args) throws Exception {
         Harness harness = new Harness();
 
         harness.withConfiguration("state.backend", "ndb");
@@ -34,10 +32,10 @@ public class Runner {
         harness.start();
     }
 
-    private static final class InputGenerator implements SerializableSupplier<InputMsg> {
+    private static final class InputGenerator implements SerializableSupplier<MyMessages.InputMsg> {
 
         @Override
-        public InputMsg get() {
+        public MyMessages.InputMsg get() {
             try {
                 Thread.sleep(1000);
 
@@ -47,11 +45,12 @@ public class Runner {
             return getRandomMessage();
         }
 
-        private InputMsg getRandomMessage(){
+        private MyMessages.InputMsg getRandomMessage(){
             final ThreadLocalRandom r = ThreadLocalRandom.current();
 //            final String userId = StringUtils.generateRandomAlphanumericString(r, 2);
-            String userId = "Chris";
-            return new InputMsg(userId,"Hello user " + userId);
+            final String userId = "Chris";
+            return new MyMessages.InputMsg(userId,"Hello user " + userId);
         }
     }
+
 }

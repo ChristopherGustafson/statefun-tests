@@ -20,6 +20,12 @@
             <artifactId>statefun-flink-harness</artifactId>
             <version>3.2.0</version>
         </dependency>
+        <dependency>
+            <groupId>org.apache.flink</groupId>
+            <artifactId>statefun-sdk-java</artifactId>
+            <version>3.2.0</version>
+            <scope>compile</scope>
+        </dependency>
 
     </dependencies>
 
