@@ -18,6 +18,24 @@ public class MyMessages {
         }
     }
 
+    public static final class InternalMessage{
+        private final String userId;
+        private final String message;
+
+        InternalMessage(String userId, String message){
+            this.userId = userId;
+            this.message = message;
+        }
+
+        public String getUserId() {
+            return userId;
+        }
+
+        public String getMessage() {
+            return message;
+        }
+    }
+
     static final class OutputMsg{
         private final String userId;
         private final String message;

@@ -9,4 +9,6 @@ public class MyRouter implements Router<InputMsg> {
     public void route(InputMsg inputMsg, Downstream<InputMsg> downstream) {
         downstream.forward(MyConstants.MY_FUNCTION_TYPE, inputMsg.getUserId(), inputMsg);
     }
+
+
 }

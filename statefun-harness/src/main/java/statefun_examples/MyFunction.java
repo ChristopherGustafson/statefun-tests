@@ -5,7 +5,7 @@ import org.apache.flink.statefun.sdk.annotations.Persisted;
 import org.apache.flink.statefun.sdk.StatefulFunction;
 import org.apache.flink.statefun.sdk.state.PersistedValue;
 import statefun_examples.MyMessages.InputMsg;
-import statefun_examples.MyMessages.OutputMsg;
+import statefun_examples.MyMessages.InternalMessage;
 
 import java.util.concurrent.CompletableFuture;
 
@@ -24,8 +24,8 @@ public class MyFunction implements StatefulFunction {
         SEEN.set(newSeen);
 
         InputMsg inputMsg = (InputMsg) input;
-        OutputMsg outputMsg = new OutputMsg(inputMsg.getUserId(), inputMsg.getMessage() + " Total msg count: " + newSeen);
-        context.send(MyConstants.MESSAGE_EGRESS, outputMsg);
+        InternalMessage internalMsg = new InternalMessage(inputMsg.getUserId(), inputMsg.getMessage() + " Total msg count: " + newSeen);
+        context.send(MyConstants.MY_SECOND_FUNCTION_TYPE, internalMsg.getUserId(), internalMsg);
     }
 
 }

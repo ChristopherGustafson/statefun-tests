@@ -12,5 +12,6 @@ public class MyModule implements StatefulFunctionModule {
     public void configure(Map<String, String> map, Binder binder) {
         binder.bindIngressRouter(MyConstants.MESSAGE_INGRESS, new MyRouter());
         binder.bindFunctionProvider(MyConstants.MY_FUNCTION_TYPE, unused -> new MyFunction());
+        binder.bindFunctionProvider(MyConstants.MY_SECOND_FUNCTION_TYPE, unused -> new MySecondFunction());
     }
 }

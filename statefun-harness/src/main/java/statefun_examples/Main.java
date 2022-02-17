@@ -38,7 +38,6 @@ public class Main {
         public MyMessages.InputMsg get() {
             try {
                 Thread.sleep(1000);
-
             } catch (InterruptedException e) {
                 throw new RuntimeException("Interrupted", e);
             }

@@ -10,10 +10,14 @@ import statefun_examples.MyMessages.OutputMsg;
 
 public final class MyConstants {
 
+    public static String namespace = "statefun-harness";
+
     public static final IngressIdentifier<InputMsg> MESSAGE_INGRESS = new IngressIdentifier<>(MyMessages.InputMsg.class, "statefun-harness", "ingress");
 
     public static final EgressIdentifier<MyMessages.OutputMsg> MESSAGE_EGRESS = new EgressIdentifier<>("statefun-harness", "egress", MyMessages.OutputMsg.class);
 
     static final FunctionType MY_FUNCTION_TYPE = new FunctionType("statefun-harness", "my-function");
+
+    static final FunctionType MY_SECOND_FUNCTION_TYPE = new FunctionType("statefun-harness", "my-second_function");
 
 }
