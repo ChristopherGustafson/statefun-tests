@@ -6,6 +6,8 @@ import org.apache.flink.statefun.sdk.StatefulFunction;
 import org.apache.flink.statefun.sdk.annotations.Persisted;
 import org.apache.flink.statefun.sdk.state.PersistedValue;
 import org.apache.flink.statefun.sdk.Address;
+
+import harness.protos.OutputMsg;
 import statefun_examples.MyMessages.InternalMessage;
 
 public class MySecondFunction implements StatefulFunction {
@@ -13,18 +15,16 @@ public class MySecondFunction implements StatefulFunction {
     @Persisted
     private final PersistedValue<Double> SEEN = PersistedValue.of("seen", Double.class);
 
-
     @Override
     public void invoke(Context context, Object message) {
-        if(!(message instanceof InternalMessage)){
+        if(!(message instanceof OutputMsg)){
             throw new IllegalArgumentException("Unexpected message type: " + message);
         }
 
         double newSeen = SEEN.getOrDefault(0.0) + 1.0;
         SEEN.set(newSeen);
 
-        InternalMessage internalMsg = (InternalMessage) message;
-        MyMessages.OutputMsg outputMsg = new MyMessages.OutputMsg(internalMsg.getUserId(), internalMsg.getMessage() + " Total msg count: " + newSeen);
+        OutputMsg outputMsg = (OutputMsg) message;
         context.send(MyConstants.MESSAGE_EGRESS, outputMsg);
 
     }

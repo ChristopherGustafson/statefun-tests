@@ -1,8 +1,7 @@
 package statefun_examples;
 
 import org.apache.flink.statefun.sdk.io.Router;
-import statefun_examples.MyMessages.InputMsg;
-
+import harness.protos.InputMsg;
 public class MyRouter implements Router<InputMsg> {
 
     @Override

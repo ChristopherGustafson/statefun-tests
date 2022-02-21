@@ -1,0 +1,6 @@
+kind: io.statefun.endpoints.v2/http
+spec:
+  functions: statefun-harness/*
+  urlPathTemplate: http://0.0.0.0:1108/
+  transport:
+    type: io.statefun.transports.v1/async

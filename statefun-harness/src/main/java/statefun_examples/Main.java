@@ -2,9 +2,9 @@ package statefun_examples;
 
 import org.apache.flink.statefun.flink.harness.Harness;
 import org.apache.flink.statefun.flink.harness.io.SerializableSupplier;
-import org.apache.flink.util.StringUtils;
 
 import java.util.concurrent.ThreadLocalRandom;
+import harness.protos.InputMsg;
 
 public class Main {
 
@@ -19,7 +19,7 @@ public class Main {
         harness.withConfiguration("state.checkpoints.dir", "file:///tmp/checkpoints");
         harness.withConfiguration("state.savepoints.dir", "file:///tmp/savepoints");
 
-        harness.withConfiguration("execution.checkpointing.interval", "2sec");
+//        harness.withConfiguration("execution.checkpointing.interval", "2sec");
 
         harness.withConfiguration(
                 "classloader.parent-first-patterns.additional",
@@ -32,10 +32,10 @@ public class Main {
         harness.start();
     }
 
-    private static final class InputGenerator implements SerializableSupplier<MyMessages.InputMsg> {
+    private static final class InputGenerator implements SerializableSupplier<InputMsg> {
 
         @Override
-        public MyMessages.InputMsg get() {
+        public InputMsg get() {
             try {
                 Thread.sleep(1000);
             } catch (InterruptedException e) {
@@ -44,11 +44,13 @@ public class Main {
             return getRandomMessage();
         }
 
-        private MyMessages.InputMsg getRandomMessage(){
+        private InputMsg getRandomMessage(){
+            System.out.println("Generating random message");
             final ThreadLocalRandom r = ThreadLocalRandom.current();
 //            final String userId = StringUtils.generateRandomAlphanumericString(r, 2);
             final String userId = "Chris";
-            return new MyMessages.InputMsg(userId,"Hello user " + userId);
+            InputMsg msg = InputMsg.newBuilder().setUserId(userId).setMessage("Hello user " + userId).build();
+            return msg;
         }
     }
 

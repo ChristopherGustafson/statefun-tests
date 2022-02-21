@@ -3,7 +3,7 @@ import org.apache.flink.statefun.flink.harness.io.SerializableSupplier;
 import org.apache.flink.util.StringUtils;
 import org.junit.Test;
 import statefun_examples.MyConstants;
-import statefun_examples.MyMessages.InputMsg;
+import harness.protos.InputMsg;
 
 import java.util.concurrent.ThreadLocalRandom;
 
@@ -34,24 +34,26 @@ public class Runner {
         harness.start();
     }
 
-    private static final class InputGenerator implements SerializableSupplier<InputMsg> {
+  private static final class InputGenerator implements SerializableSupplier<InputMsg> {
 
-        @Override
-        public InputMsg get() {
-            try {
-                Thread.sleep(1000);
-
-            } catch (InterruptedException e) {
-                throw new RuntimeException("Interrupted", e);
-            }
-            return getRandomMessage();
-        }
-
-        private InputMsg getRandomMessage(){
-            final ThreadLocalRandom r = ThreadLocalRandom.current();
-//            final String userId = StringUtils.generateRandomAlphanumericString(r, 2);
-            String userId = "Chris";
-            return new InputMsg(userId,"Hello user " + userId);
-        }
+    @Override
+    public InputMsg get() {
+      try {
+        Thread.sleep(1000);
+      } catch (InterruptedException e) {
+        throw new RuntimeException("Interrupted", e);
+      }
+      return getRandomMessage();
     }
+
+    private InputMsg getRandomMessage() {
+      final ThreadLocalRandom r = ThreadLocalRandom.current();
+      final String userId = StringUtils.generateRandomAlphanumericString(r, 2);
+      //            final String userId = "Chris";
+      InputMsg msg =
+          InputMsg.newBuilder().setUserId(userId).setMessage("Hello user " + userId).build();
+      return msg;
+    }
+  }
+
 }

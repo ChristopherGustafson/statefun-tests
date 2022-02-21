@@ -1,0 +1,22 @@
+syntax = "proto3";
+
+package protos;
+
+option java_multiple_files = true;
+option java_package = "harness.protos";
+option java_outer_classname = "MessageProtos";
+
+message InputMsg {
+    string userId = 1;
+    string message = 2;
+}
+
+message InternalMsg {
+  string userId = 1;
+  string message = 2;
+}
+
+message OutputMsg {
+  string userId = 1;
+  string message = 2;
+}
