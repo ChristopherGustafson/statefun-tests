@@ -11,6 +11,7 @@ public class Main {
     public static void main(String[] args) throws Exception {
         Harness harness = new Harness();
 
+//        harness.withConfiguration("state.backend", "rocksdb");
         harness.withConfiguration("state.backend", "ndb");
         harness.withConfiguration("state.backend.ndb.connectionstring", "127.0.0.1");
         harness.withConfiguration("state.backend.ndb.dbname", "flinkndb");
@@ -19,7 +20,7 @@ public class Main {
         harness.withConfiguration("state.checkpoints.dir", "file:///tmp/checkpoints");
         harness.withConfiguration("state.savepoints.dir", "file:///tmp/savepoints");
 
-//        harness.withConfiguration("execution.checkpointing.interval", "2sec");
+        harness.withConfiguration("execution.checkpointing.interval", "2sec");
 
         harness.withConfiguration(
                 "classloader.parent-first-patterns.additional",
@@ -45,7 +46,6 @@ public class Main {
         }
 
         private InputMsg getRandomMessage(){
-            System.out.println("Generating random message");
             final ThreadLocalRandom r = ThreadLocalRandom.current();
 //            final String userId = StringUtils.generateRandomAlphanumericString(r, 2);
             final String userId = "Chris";

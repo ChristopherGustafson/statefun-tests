@@ -30,7 +30,7 @@ public class RemoteFn implements StatefulFunction {
         storage.set(SEEN, newSeenCount);
 
         InternalMsg internalMsg = message.as(Types.INTERNAL_MSG_TYPE);
-        System.out.println("Remote function invoked with message: " + internalMsg.getMessage() + " at functino with id " + internalMsg.getUserId());
+        System.out.println("Remote function invoked with message: " + internalMsg.getMessage() + " at function with id " + internalMsg.getUserId());
         OutputMsg outputMsg = OutputMsg.newBuilder()
                 .setUserId(internalMsg.getUserId())
                 .setMessage(internalMsg.getMessage())

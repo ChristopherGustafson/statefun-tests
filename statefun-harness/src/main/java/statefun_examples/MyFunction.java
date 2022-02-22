@@ -22,6 +22,7 @@ public class MyFunction implements StatefulFunction {
 
     @Override
     public void invoke(Context context, Object input) {
+
         if(!(input instanceof InputMsg)){
             throw new IllegalArgumentException("Unexpected message type: " + input);
         }
@@ -31,7 +32,6 @@ public class MyFunction implements StatefulFunction {
 
         InputMsg inputMsg = (InputMsg) input;
         InternalMsg internalMsg = InternalMsg.newBuilder().setUserId(inputMsg.getUserId()).setMessage(inputMsg.getMessage() + " Total msg count: " + newSeen).build();
-        System.out.println("\n\nSENDING MESSAGE TO REMOTE FUNCTION with seen value " + newSeen + "\n\n");
         context.send(MyConstants.MY_REMOTE_FUNCTION_TYPE, internalMsg.getUserId(), pack(internalMsg));
     }
 
