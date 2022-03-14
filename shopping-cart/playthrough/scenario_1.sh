@@ -10,7 +10,7 @@ source $(dirname "$0")/utils.sh
 # 1)
 key="socks" # itemId
 json=$(cat <<JSON
-  {"itemId":"socks","quantity":50}
+  {"itemId":"socks","quantity":2000}
 JSON
 )
 ingress_topic="restock-items" # StockFn
@@ -18,6 +18,10 @@ send_to_kafka $key $json $ingress_topic
 sleep 1
 #--------------------------------
 # 2)
+
+for i in {1..300}
+do
+sleep 2
 key="1" # userId
 json=$(cat <<JSON
   {"userId":"1","quantity":3,"itemId":"socks"}
@@ -25,9 +29,6 @@ JSON
 )
 ingress_topic="add-to-cart" # UserShoppingCartFn
 send_to_kafka $key $json $ingress_topic
-sleep 1
-#--------------------------------
-# 3)
 key="1" # userId
 json=$(cat <<JSON
   {"userId":"1"}
@@ -35,3 +36,8 @@ JSON
 )
 ingress_topic="checkout" # UserShoppingCartFn
 send_to_kafka $key $json $ingress_topic
+done
+
+#--------------------------------
+# 3)
+

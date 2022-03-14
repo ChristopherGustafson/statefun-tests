@@ -15,7 +15,7 @@
 #  See the License for the specific language governing permissions and
 # limitations under the License.
 ################################################################################
-version: "2.1"
+version: "3.4"
 
 services:
 
@@ -27,56 +27,107 @@ services:
     build:
       dockerfile: Dockerfile
       context: .
-    expose:
-      - "1108"
+#    expose:
+#      - "1108"
+    network_mode: host
 
   ###############################################################
   #    StateFun runtime
   ###############################################################
 
-  master:
-    build:
-      dockerfile: local-source-docker/Dockerfile
-      context: .
+  statefun-manager:
+    image: flink-statefun-local:latest
     expose:
       - "6123"
     ports:
       - "8081:8081"
     environment:
-      - ROLE=master
-  worker:
-    build:
-      dockerfile: local-source-docker/Dockerfile
-      context: .
+      ROLE: master
+      MASTER_HOST: localhost
+    volumes:
+      - ./module.yaml:/opt/statefun/modules/shopping-cart/module.yaml
+    network_mode: host
+
+  statefun-worker:
+    image: flink-statefun-local:latest
     expose:
       - "6121"
       - "6122"
     depends_on:
-      - master
-    links:
-      - "master:master"
+      - statefun-manager
+      - kafka
+      - shopping-cart-functions
+#    links:
+#      - "statefun-manager:statefun-manager"
+#      - "kafka:kafka"
+#      - "shopping-cart-functions:shopping-cart-functions"
     environment:
-      - ROLE=worker
+      ROLE: worker
+      MASTER_HOST: localhost
+    volumes:
+      - ./module.yaml:/opt/statefun/modules/shopping-cart/module.yaml
+    network_mode: host
 
   ###############################################################
   #    Kafka for ingress and egress
   ###############################################################
 
-  kafka:
-    image: docker.vectorized.io/vectorized/redpanda:v21.8.1
-    command:
-      - redpanda start
-      - --smp 1
-      - --memory 512M
-      - --overprovisioned
-      - --set redpanda.default_topic_replications=1
-      - --set redpanda.auto_create_topics_enabled=true
-      - --kafka-addr INSIDE://0.0.0.0:9094,OUTSIDE://0.0.0.0:9092
-      - --advertise-kafka-addr INSIDE://kafka:9094,OUTSIDE://kafka:9092
-      - --pandaproxy-addr 0.0.0.0:8089
-      - --advertise-pandaproxy-addr kafka:8089
-    hostname: kafka
+  zookeeper:
+    image: confluentinc/cp-zookeeper:5.4.3
+    environment:
+      ZOOKEEPER_CLIENT_PORT: "2181"
     ports:
-      - "8089:8089"
+      - "2181:2181"
+    network_mode: host
+
+  kafka:
+    image: confluentinc/cp-kafka:5.4.3
+    ports:
       - "9092:9092"
-      - "9094:9094"
+    depends_on:
+      - zookeeper
+    hostname: kafka
+#    links:
+#      - "zookeeper:zookeeper"
+    environment:
+      KAFKA_BROKER_ID: 1
+      KAFKA_ZOOKEEPER_CONNECT: localhost:2181
+      KAFKA_ADVERTISED_LISTENERS: PLAINTEXT://localhost:9092
+      KAFKA_LISTENERS: PLAINTEXT://0.0.0.0:9092
+      KAFKA_ADVERTISED_HOST_NAME: localhost
+      KAFKA_AUTO_CREATE_TOPICS_ENABLE: "true"
+      KAFKA_OFFSETS_TOPIC_REPLICATION_FACTOR: 1
+      KAFKA_TRANSACTION_STATE_LOG_REPLICATION_FACTOR: 1
+      KAFKA_TRANSACTION_STATE_LOG_MIN_ISR: 1
+      KAFKA_MIN_INSYNC_REPLICAS: 1
+    network_mode: host
+
+
+#  kafka-2:
+#    image: confluentinc/cp-kafka:5.4.3
+#    ports:
+#      - "19092:19092"
+#    depends_on:
+#      - zookeeper
+#    #    links:
+#    #      - "zookeeper:zookeeper"
+#    environment:
+#      KAFKA_BROKER_ID: 2
+#      KAFKA_ZOOKEEPER_CONNECT: localhost:2181
+#      KAFKA_ADVERTISED_LISTENERS: PLAINTEXT://localhost:19092
+#      KAFKA_AUTO_CREATE_TOPICS_ENABLE: "true"
+#    network_mode: host
+#  kafka-3:
+#    image: confluentinc/cp-kafka:5.4.3
+#    ports:
+#      - "29092:29092"
+#    depends_on:
+#      - zookeeper
+#    #    links:
+#    #      - "zookeeper:zookeeper"
+#    environment:
+#      KAFKA_BROKER_ID: 3
+#      KAFKA_ZOOKEEPER_CONNECT: localhost:2181
+#      KAFKA_ADVERTISED_LISTENERS: PLAINTEXT://localhost:29092
+#      KAFKA_AUTO_CREATE_TOPICS_ENABLE: "true"
+#    network_mode: host
