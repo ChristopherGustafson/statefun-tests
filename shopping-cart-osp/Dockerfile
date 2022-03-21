@@ -27,3 +27,4 @@ WORKDIR /
 COPY --from=builder /usr/src/app/target/shopping-cart*jar-with-dependencies.jar shopping-cart.jar
 EXPOSE 1108
 CMD java -jar shopping-cart.jar
+

@@ -15,66 +15,79 @@
 
 kind: io.statefun.endpoints.v2/http
 spec:
-  functions: com.example/*
+  functions: statefun.ndb/*
   urlPathTemplate: http://localhost:1108/
   transport:
     type: io.statefun.transports.v1/async
+#---
+#kind: io.statefun.kafka.v1/ingress
+#spec:
+#  id: statefun.ndb/add-to-cart
+#  address: localhost:9092
+#  consumerGroupId: my-group-id
+##  value:
+##    deserializer:
+##      org.apache.flink.statefun.palyground.java.shoppingcart.KafkaDeserializer
+#  topics:
+#    - topic: add-to-cart
+#      valueType: statefun.ndb/AddToCart
+#      targets:
+#        - statefun.ndb/user-shopping-cart
+#  properties:
+#    - transaction.timeout.ms: 7200000
 ---
 kind: io.statefun.kafka.v1/ingress
 spec:
-  id: example.com/add-to-cart
-  address: localhost:9092
-  consumerGroupId: my-group-id
-  topics:
-    - topic: add-to-cart
-      valueType: com.example/AddToCart
-      targets:
-        - com.example/user-shopping-cart
-  properties:
-    - transaction.timeout.ms: 7200000
----
-kind: io.statefun.kafka.v1/ingress
-spec:
-  id: example.com/clear-cart
+  id: statefun.ndb/clear-cart
   address: localhost:9092
   consumerGroupId: my-group-id
   topics:
     - topic: clear-cart
-      valueType: com.example/ClearCart
+      valueType: statefun.ndb/ClearCart
       targets:
-        - com.example/user-shopping-cart
+        - statefun.ndb/user-shopping-cart
   properties:
     - transaction.timeout.ms: 7200000
 ---
 kind: io.statefun.kafka.v1/ingress
 spec:
-  id: example.com/checkout
+  id: statefun.ndb/checkout
   address: localhost:9092
   consumerGroupId: my-group-id
   topics:
     - topic: checkout
-      valueType: com.example/Checkout
+      valueType: statefun.ndb/Checkout
       targets:
-        - com.example/user-shopping-cart
+        - statefun.ndb/user-shopping-cart
   properties:
     - transaction.timeout.ms: 7200000
 ---
 kind: io.statefun.kafka.v1/ingress
 spec:
-  id: com.example/restock-items
+  id: statefun.ndb/restock-items
   address: localhost:9092
   consumerGroupId: my-group-id
   topics:
     - topic: restock-items
-      valueType: com.example/RestockItem
+      valueType: statefun.ndb/RestockItem
       targets:
-        - com.example/stock
+        - statefun.ndb/stock
   properties:
     - transaction.timeout.ms: 7200000
 ---
 kind: io.statefun.kafka.v1/egress
 spec:
-  id: com.example/receipts
+  id: statefun.ndb/receipts
+  address: localhost:9092
+  deliverySemantic:
+    type: exactly-once
+    transactionTimeout: 15min
+  properties:
+    - transaction.timeout.ms: 7200000
+---
+kind: io.statefun.kafka.v1/egress
+spec:
+  id: statefun.ndb/add-confirm
   address: localhost:9092
   deliverySemantic:
     type: exactly-once

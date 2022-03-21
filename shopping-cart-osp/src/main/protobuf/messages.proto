@@ -1,0 +1,23 @@
+syntax = "proto3";
+
+package org.apache.flink.statefun.playground.java.shoppingcartosp;
+
+option java_multiple_files = true;
+option java_package = "org.apache.flink.statefun.playground.java.shoppingcartosp.generated";
+
+message AddToCart {
+  string userId = 1;
+  string itemId = 2;
+  int32 quantity = 3;
+  string publishTimestamp = 4;
+}
+
+message RequestItem {
+  int32 quantity = 1;
+  string publishTimestamp = 2;
+}
+
+message ItemAvailability {
+  int32 quantity = 1;
+  string timestamp = 2;
+}
